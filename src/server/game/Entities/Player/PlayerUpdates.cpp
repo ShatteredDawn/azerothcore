@@ -832,7 +832,7 @@ bool Player::UpdateCraftSkill(uint32 spellid)
 {
     LOG_DEBUG("entities.player.skills", "UpdateCraftSkill spellid {}", spellid);
 
-    SkillLineAbilityMapBounds bounds = sSpellMgr->GetSkillLineAbilityMapBounds(spellid);
+    SkillLineAbilityMapBounds bounds = sSpellMgr.GetSkillLineAbilityMapBounds(spellid);
 
     for (SkillLineAbilityMap::const_iterator _spell_idx = bounds.first;
          _spell_idx != bounds.second; ++_spell_idx)
@@ -843,7 +843,7 @@ bool Player::UpdateCraftSkill(uint32 spellid)
                 GetPureSkillValue(_spell_idx->second->SkillLine);
 
             // Alchemy Discoveries here
-            SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellid);
+            SpellInfo const* spellInfo = sSpellMgr.GetSpellInfo(spellid);
             if (spellInfo && spellInfo->Mechanic == MECHANIC_DISCOVERY)
             {
                 if (uint32 discoveredSpell = GetSkillDiscoverySpell(
@@ -1568,7 +1568,7 @@ void Player::UpdatePotionCooldown(Spell* spell)
                 if (proto->Spells[idx].SpellId &&
                     proto->Spells[idx].SpellTrigger == ITEM_SPELLTRIGGER_ON_USE)
                     if (SpellInfo const* spellInfo =
-                            sSpellMgr->GetSpellInfo(proto->Spells[idx].SpellId))
+                            sSpellMgr.GetSpellInfo(proto->Spells[idx].SpellId))
                         SendCooldownEvent(spellInfo, GetLastPotionId());
     }
     // from spell cases (m_lastPotionId set in Spell::SendSpellCooldown)
@@ -1851,7 +1851,7 @@ void Player::UpdateZoneDependentAuras(uint32 newZone)
     // Some spells applied at enter into zone (with subzones), aura removed in
     // UpdateAreaDependentAuras that called always at zone->area update
     SpellAreaForAreaMapBounds saBounds =
-        sSpellMgr->GetSpellAreaForAreaMapBounds(newZone);
+        sSpellMgr.GetSpellAreaForAreaMapBounds(newZone);
     for (SpellAreaForAreaMap::const_iterator itr = saBounds.first;
          itr != saBounds.second; ++itr)
         if (itr->second->autocast &&
@@ -1901,7 +1901,7 @@ void Player::UpdateAreaDependentAuras(uint32 newArea)
 
     // some auras applied at subzone enter
     SpellAreaForAreaMapBounds saBounds =
-        sSpellMgr->GetSpellAreaForAreaMapBounds(newArea);
+        sSpellMgr.GetSpellAreaForAreaMapBounds(newArea);
     for (SpellAreaForAreaMap::const_iterator itr = saBounds.first;
          itr != saBounds.second; ++itr)
         if (itr->second->autocast &&
@@ -2371,7 +2371,7 @@ void Player::ProcessSpellQueue()
     while (!SpellQueue.empty())
     {
         PendingSpellCastRequest& request = SpellQueue.front(); // Peek at the first spell
-        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(request.spellId);
+        SpellInfo const* spellInfo = sSpellMgr.GetSpellInfo(request.spellId);
         if (!spellInfo)
         {
             LOG_ERROR("entities.player", "Player::ProcessSpellQueue: Invalid spell {}", request.spellId);

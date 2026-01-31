@@ -95,7 +95,7 @@ void AddItemsSetItem(Player* player, Item* item)
         {
             if (!eff->spells[y])                             // free slot
             {
-                SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(set->spells[x]);
+                SpellInfo const* spellInfo = sSpellMgr.GetSpellInfo(set->spells[x]);
                 if (!spellInfo)
                 {
                     LOG_ERROR("entities.item", "WORLD: unknown spell id {} in items set {} effects", set->spells[x], setid);
@@ -1277,12 +1277,12 @@ void Item::ClearSoulboundTradeable(Player* currentOwner)
 
 bool Item::CheckSoulboundTradeExpire()
 {
-    // we have to check the owner for mod_playerbots since bots programically call methods like DestroyItem, 
+    // we have to check the owner for mod_playerbots since bots programically call methods like DestroyItem,
     // MoveItemToMail, DestroyItemCount which do not handle soulboundTradeable clearing.
     Player* owner = GetOwner();
     if (!owner)
         return true; // remove from tradeable list
-    
+
     if (GetUInt32Value(ITEM_FIELD_CREATE_PLAYED_TIME) + 2 * HOUR < owner->GetTotalPlayedTime())
     {
         ClearSoulboundTradeable(owner);
